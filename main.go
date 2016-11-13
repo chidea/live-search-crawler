@@ -143,7 +143,7 @@ func parse(db *sql.DB, name, url string, parseFn func(*http.Response) ([10]rank,
     return rst, err
   }
   defer r.Body.Close()
-  rst, err := parseFn(r)
+  rst, err = parseFn(r)
   log.Println("#", name,  "#", t, "#")
   if err != nil {
     log.Fatal("Cannot get result of ", name, " error:", err)
