@@ -23,14 +23,16 @@ func main(){
   if ! initDB(db) { return }
   for {
     log.Println(time.Now())
-    err := parse(db, "Naver", "http://www.naver.com/include/realrank.html.09", parseNaver, nstmt)
+    _, err := parse(db, "Naver", "http://www.naver.com/include/realrank.html.09", parseNaver, nstmt)
     if err != nil {
       time.Sleep(1*time.Minute)
+      log.Fatal(err)
       continue
     }
-    err = parse(db, "Daum", "http://www.daum.net", parseDaum, dstmt)
+    _, err = parse(db, "Daum", "http://www.daum.net", parseDaum, dstmt)
     if err != nil {
       time.Sleep(1*time.Minute)
+      log.Fatal(err)
       continue
     }
     time.Sleep(15*time.Minute)
@@ -134,11 +136,11 @@ func tranDB(db *sql.DB, stmt *sql.Stmt, t time.Time, rst [10]rank, name string) 
 
 func parse(db *sql.DB, name, url string, parseFn func(*http.Response) ([10]rank, error), stmt *sql.Stmt) ([10]rank, error){
   t := time.Now()
-  r, _ := http.Get(url)
+  r, err := http.Get(url)
   var rst [10]rank
   if r == nil {
     log.Println("Cannot connect to", name)
-    return rst
+    return rst, err
   }
   defer r.Body.Close()
   rst, err := parseFn(r)
