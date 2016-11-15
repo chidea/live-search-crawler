@@ -137,12 +137,14 @@ func tranDB(db *sql.DB, stmt *sql.Stmt, t time.Time, rst [10]rank, name string) 
 func parse(db *sql.DB, name, url string, parseFn func(*http.Response) ([10]rank, error), stmt *sql.Stmt) ([10]rank, error){
   t := time.Now()
   r, err := http.Get(url)
+  if r != nil {
+    defer r.Body.Close()
+  }
   var rst [10]rank
-  if r == nil {
+  if err != nil {
     log.Println("Cannot connect to", name)
     return rst, err
   }
-  defer r.Body.Close()
   rst, err = parseFn(r)
   log.Println("#", name,  "#", t, "#")
   if err != nil {
