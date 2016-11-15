@@ -21,6 +21,10 @@ func main(){
   }
   defer db.Close()
   if ! initDB(db) { return }
+  defer func (){
+    log.Println("Live Search Crawler has been stopped")
+  }
+  log.Println("Live Search Crawler has been started")
   for {
     log.Println(time.Now())
     _, err := parse(db, "Naver", "http://www.naver.com/include/realrank.html.09", parseNaver, nstmt)
