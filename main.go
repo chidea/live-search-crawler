@@ -23,7 +23,7 @@ func main(){
   if ! initDB(db) { return }
   defer func (){
     log.Println("Live Search Crawler has been stopped")
-  }
+  }()
   log.Println("Live Search Crawler has been started")
   for {
     log.Println(time.Now())
