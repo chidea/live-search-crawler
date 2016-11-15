@@ -120,13 +120,11 @@ func tranDB(db *sql.DB, stmt *sql.Stmt, t time.Time, rst [10]rank, name string) 
     var kid int
     err = tx.Stmt(ksstmt).QueryRow(v.Keyword).Scan(&kid)
     if err != nil { return rollDB(tx, err) }
-    log.Println("Keyword", v.Keyword, "inserted as #", kid)
-
     rrst, err := tx.Stmt(stmt).Exec(tid, kid, i+1, v.State)
     if err != nil { return rollDB(tx, err) }
     rid, err := rrst.LastInsertId()
     if err != nil { return rollDB(tx, err) }
-    log.Println(name, "rank #", i+1, "(", v.State, ") inserted as #", rid)
+    log.Println(name, "rank #", i+1, "(", v.State, ") inserted as #", rid, "with Keyword", v.Keyword, "inserted as #", kid)
   }
 
   err = tx.Commit()
