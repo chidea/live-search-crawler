@@ -30,13 +30,11 @@ func main(){
     _, err := parse(db, "Naver", "http://www.naver.com/include/realrank.html.09", parseNaver, nstmt)
     if err != nil {
       time.Sleep(1*time.Minute)
-      log.Fatal(err)
       continue
     }
     _, err = parse(db, "Daum", "http://www.daum.net", parseDaum, dstmt)
     if err != nil {
       time.Sleep(1*time.Minute)
-      log.Fatal(err)
       continue
     }
     time.Sleep(15*time.Minute)
@@ -144,7 +142,7 @@ func parse(db *sql.DB, name, url string, parseFn func(*http.Response) ([10]rank,
   }
   var rst [10]rank
   if err != nil {
-    log.Println("Cannot connect to", name)
+    log.Println("Cannot connect to", name, "error:", err)
     return rst, err
   }
   rst, err = parseFn(r)
